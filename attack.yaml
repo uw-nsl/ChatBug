@@ -1,0 +1,97 @@
+defaults:  
+  - _self_  
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled  
+
+
+dataset_path: datasets/advbench.csv
+
+start: null
+end: null
+
+# attack_method: "overflow"
+# attack_method: "overflow_short"
+attack_method: "overflow_fs"
+# attack_method: "mismatch_no"
+# attack_method: "mismatch_vicuna"
+# attack_method: "mismatch_chatml"
+# attack_method: "direct_inst"
+
+
+jailbreak_add: null
+fs_target_dir: datasets
+output_dir: "./output_data"
+
+defense: null
+
+system_prompt: null
+seed: 42
+llm_params:
+  # open source models
+  # model_name: "lmsys/vicuna-7b-v1.5"
+  # model_name: "mistralai/Mistral-7B-Instruct-v0.2"
+  model_name: "meta-llama/Llama-2-7b-chat-hf"
+  # model_name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  
+  # api models
+  # model_name: "claude-2.1"
+  # model_name: "claude-3-opus-20240229"
+  # model_name: "gemini-1.0-pro-latest"
+  # "model_name": "gpt-3.5-turbo-azure"
+
+  lora_path: null # setup for finetuned model ckpt
+  use_api: false
+
+  endpoint: null
+  device_map: "auto"
+  dtype: "float16"
+  new_gen_length: 100
+  batch_size: 64
+
+  generation_config:
+    do_sample: false
+    temperature: null
+    top_p: 1
+
+eval: 
+  kw_enable: true
+  llm_enable: false
+
+llm_eval_params:
+  model_name: "meta-llama/Meta-Llama-Guard-2-8B"
+  use_api: False
+  endpoint: null
+  device_map: "auto"
+  dtype: "float16"
+  new_gen_length: 100
+  batch_size: 64
+
+  generation_config:
+    do_sample: false
+    temperature: 0
+    top_p: 1
+
+# for fs attack gen
+llm_attack_params:
+  model_name: "cognitivecomputations/Wizard-Vicuna-13B-Uncensored"
+  use_api: false
+  lora_path: null
+  endpoint: null
+  device_map: "auto"
+  dtype: "float16"
+  new_gen_length: 20
+  batch_size: 5
+  quantized_config:
+    load_in_8bit: true
+    load_in_4bit: false
+  
+
+  generation_config:
+    do_sample: true
+    num_return_sequences: 100
+    temperature: 1
+    top_p: 1
+
+wandb:
+  enable: false
+  project: "Chatbug"
